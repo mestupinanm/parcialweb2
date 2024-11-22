@@ -1,5 +1,6 @@
-#PARCIAL 2
-#María Paula Estupiñan Martinez - 202212331
+PARCIAL 2
+
+- María Paula Estupiñan Martinez - 202212331
 
 
 <p align="center">
