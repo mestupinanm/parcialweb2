@@ -1,8 +1,14 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
-import { MedicoPacienteService } from './paciente-medico.service';
+import { PacienteMedicoService } from './paciente-medico.service';
+import { PacienteEntity } from '../paciente/paciente.entity';
+import { MedicoEntity } from '../medico/medico.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { PacienteMedicoController } from './paciente-medico.controller';
 
 @Module({
-  providers: [MedicoPacienteService]
+  imports: [TypeOrmModule.forFeature([PacienteEntity, MedicoEntity])],
+  providers: [PacienteMedicoService],
+  controllers: [PacienteMedicoController]
 })
-export class MedicoPacienteMedicoModule {}
+export class PacienteMedicoModule {}

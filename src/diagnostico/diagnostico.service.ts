@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DiagnosticoEntity } from './diagnostico.entity';
-import { BusinessError, BusinessLogicException } from '../shared/error/business-error';
+import { BadRequestException, BusinessError, BusinessLogicException } from '../shared/error/business-error';
 
 @Injectable()
 export class DiagnosticoService {
@@ -23,7 +23,7 @@ export class DiagnosticoService {
   async findOne(id: string): Promise<DiagnosticoEntity> {
     const diagnostico = await this.diagnosticoRepository.findOne({ where: { id } });
     if (!diagnostico) {
-      throw new BusinessLogicException('El diagnóstico con el id proporcionado no fue encontrado',BusinessError.NOT_FOUND);
+      throw new BusinessLogicException('The diagnostico with the given id was not found',BusinessError.NOT_FOUND);
     }
     return diagnostico;
   }
@@ -33,7 +33,7 @@ export class DiagnosticoService {
   async create(diagnostico: DiagnosticoEntity): Promise<DiagnosticoEntity> {
     //validación
     if (diagnostico.descripcion.length > 200) {
-      throw new BusinessLogicException('La descripción no puede tener más de 200 caracteres',BusinessError.PRECONDITION_FAILED);
+      throw new BadRequestException('The description must not exceed 200 characters', BusinessError.BAD_REQUEST);
     }
     //fin validacion
     return await this.diagnosticoRepository.save(diagnostico);
@@ -43,7 +43,7 @@ export class DiagnosticoService {
   //Método delete
   async delete(id: string): Promise<void> {
     const diagnostico = await this.diagnosticoRepository.findOne({ where: { id } });
-    if (!diagnostico) {throw new BusinessLogicException('El diagnóstico con el id proporcionado no fue encontrado',BusinessError.NOT_FOUND);
+    if (!diagnostico) {throw new BusinessLogicException('The diagnostico with the given id was not found',BusinessError.NOT_FOUND);
     }
     await this.diagnosticoRepository.remove(diagnostico);
   }

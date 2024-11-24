@@ -13,9 +13,6 @@ export class MedicoEntity {
   @Column()
   especialidad: string;
 
-  @Column()
-  telefono: string;
-
   @ManyToMany(() => PacienteEntity, (paciente) => paciente.medicos)
   @JoinTable() 
   pacientes: PacienteEntity[];

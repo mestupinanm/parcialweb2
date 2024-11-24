@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MedicoEntity } from './medico.entity';
-import { BusinessError, BusinessLogicException } from '../shared/error/business-error';
+import { BadRequestException, BusinessError, BusinessLogicException } from '../shared/error/business-error';
 
 @Injectable()
 export class MedicoService {
@@ -23,7 +23,7 @@ export class MedicoService {
   async findOne(id: string): Promise<MedicoEntity> {
     const medico = await this.medicoRepository.findOne({where: { id }, relations: ['pacientes']});
     if (!medico) {
-      throw new BusinessLogicException('El médico con el id proporcionado no fue encontrado',BusinessError.NOT_FOUND);
+      throw new BusinessLogicException('The medico with the given id was not found',BusinessError.NOT_FOUND);
     }
     return medico;
   }
@@ -32,8 +32,11 @@ export class MedicoService {
   //Método create
   async create(medico: MedicoEntity): Promise<MedicoEntity> {
     //validacion
-    if (!medico.nombre || !medico.especialidad) {
-      throw new BusinessLogicException('El nombre y la especialidad no pueden estar vacíos',BusinessError.PRECONDITION_FAILED);
+    if (medico.nombre.trim() === ''){
+            throw new BadRequestException('The name can not be empty', BusinessError.BAD_REQUEST);
+        }
+    if (medico.especialidad.trim() === ''){
+        throw new BadRequestException('The especialidad can not be empty', BusinessError.BAD_REQUEST);
     }
     //fin validacion
     return await this.medicoRepository.save(medico);
@@ -44,7 +47,7 @@ export class MedicoService {
   async delete(id: string): Promise<void> {
     const medico = await this.medicoRepository.findOne({where: { id },relations: ['pacientes']});
     if (!medico) {
-        throw new BusinessLogicException('El médico con el id proporcionado no fue encontrado',BusinessError.NOT_FOUND);
+        throw new BusinessLogicException('The medico with the given id was not found',BusinessError.NOT_FOUND);
     }
     if (medico.pacientes && medico.pacientes.length > 0) {
         throw new BusinessLogicException('No se puede eliminar un médico que tiene pacientes asociados',BusinessError.PRECONDITION_FAILED);
