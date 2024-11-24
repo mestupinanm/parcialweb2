@@ -31,11 +31,9 @@ export class DiagnosticoService {
 
   //Método create
   async create(diagnostico: DiagnosticoEntity): Promise<DiagnosticoEntity> {
-    //validación
     if (diagnostico.descripcion.length > 200) {
       throw new BadRequestException('The description must not exceed 200 characters', BusinessError.BAD_REQUEST);
     }
-    //fin validacion
     return await this.diagnosticoRepository.save(diagnostico);
   }
 

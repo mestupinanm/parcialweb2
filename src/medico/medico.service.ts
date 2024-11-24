@@ -31,14 +31,12 @@ export class MedicoService {
 
   //Método create
   async create(medico: MedicoEntity): Promise<MedicoEntity> {
-    //validacion
     if (medico.nombre.trim() === ''){
             throw new BadRequestException('The name can not be empty', BusinessError.BAD_REQUEST);
         }
     if (medico.especialidad.trim() === ''){
         throw new BadRequestException('The especialidad can not be empty', BusinessError.BAD_REQUEST);
     }
-    //fin validacion
     return await this.medicoRepository.save(medico);
   }
 
